@@ -41,53 +41,8 @@ const Index = () => {
           </p>
         </header>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
-          <Card className="card-hover animate-slide-in">
-            <CardHeader className="text-center">
-              <div className="mx-auto p-3 bg-accent-light rounded-xl mb-4 w-fit">
-                <Sparkles className="h-6 w-6 text-accent" />
-              </div>
-              <CardTitle className="text-lg">AI-Powered Matching</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-center">
-                Advanced algorithms match students with perfect mentors based on goals, interests, and career paths.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover animate-slide-in" style={{ animationDelay: '0.1s' }}>
-            <CardHeader className="text-center">
-              <div className="mx-auto p-3 bg-success/10 rounded-xl mb-4 w-fit">
-                <Target className="h-6 w-6 text-success" />
-              </div>
-              <CardTitle className="text-lg">Career Guidance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-center">
-                Personalized career coaching, job opportunities, and skill development recommendations.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover animate-slide-in" style={{ animationDelay: '0.2s' }}>
-            <CardHeader className="text-center">
-              <div className="mx-auto p-3 bg-warning/10 rounded-xl mb-4 w-fit">
-                <MessageCircle className="h-6 w-6 text-warning" />
-              </div>
-              <CardTitle className="text-lg">Community Building</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-center">
-                Foster connections through events, forums, and collaborative projects within your network.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Role Selection */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto mb-16">
           <h2 className="text-3xl font-bold text-center mb-8 text-gradient-primary">
             Choose Your Role
           </h2>
@@ -188,6 +143,51 @@ const Index = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          <Card className="card-hover animate-slide-in">
+            <CardHeader className="text-center">
+              <div className="mx-auto p-3 bg-accent-light rounded-xl mb-4 w-fit">
+                <Sparkles className="h-6 w-6 text-accent" />
+              </div>
+              <CardTitle className="text-lg">AI-Powered Matching</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground text-center">
+                Advanced algorithms match students with perfect mentors based on goals, interests, and career paths.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="card-hover animate-slide-in" style={{ animationDelay: '0.1s' }}>
+            <CardHeader className="text-center">
+              <div className="mx-auto p-3 bg-success/10 rounded-xl mb-4 w-fit">
+                <Target className="h-6 w-6 text-success" />
+              </div>
+              <CardTitle className="text-lg">Career Guidance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground text-center">
+                Personalized career coaching, job opportunities, and skill development recommendations.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="card-hover animate-slide-in" style={{ animationDelay: '0.2s' }}>
+            <CardHeader className="text-center">
+              <div className="mx-auto p-3 bg-warning/10 rounded-xl mb-4 w-fit">
+                <MessageCircle className="h-6 w-6 text-warning" />
+              </div>
+              <CardTitle className="text-lg">Community Building</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground text-center">
+                Foster connections through events, forums, and collaborative projects within your network.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
