@@ -28,6 +28,14 @@ const StudentDashboard = () => {
   const [showAICoach, setShowAICoach] = useState(false);
   const [showFloatingChat, setShowFloatingChat] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      text: "Hi! How can I help you today? I can assist you with finding mentors, career guidance, job recommendations, and skill development.",
+      isAI: true,
+      timestamp: new Date()
+    }
+  ]);
 
   const handleAICoach = () => {
     setShowAICoach(true);
@@ -40,11 +48,43 @@ const StudentDashboard = () => {
   const handleSendMessage = () => {
     if (!aiMessage.trim()) return;
     
-    toast({
-      title: "Message Sent to AI Coach",
-      description: "I'll analyze your goals and suggest the best mentors for you.",
-    });
+    // Add user message
+    const userMessage = {
+      id: messages.length + 1,
+      text: aiMessage,
+      isAI: false,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
     setAiMessage('');
+    
+    // Simulate AI response after a short delay
+    setTimeout(() => {
+      const aiResponses = [
+        "That's a great question! Based on your profile, I recommend connecting with Dr. Sarah Chen who specializes in Machine Learning.",
+        "I can help you with that! Let me analyze your goals and suggest the best career path for you.",
+        "Excellent! I've found some perfect job opportunities that match your skills. Would you like me to send you the details?",
+        "Based on your interests, I suggest focusing on these key skills: React, Python, and data analysis. Shall I find mentors in these areas?",
+        "I've identified 3 alumni who can help with your career goals. Would you like me to send connection requests on your behalf?"
+      ];
+      
+      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+      
+      const aiMessage = {
+        id: messages.length + 2,
+        text: randomResponse,
+        isAI: true,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+    }, 1000);
+    
+    toast({
+      title: "Message Sent",
+      description: "AI Coach is analyzing your request...",
+    });
   };
 
   const suggestedMentors = [
@@ -436,16 +476,24 @@ const StudentDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0 flex flex-col h-full">
-                <div className="flex-1 p-4 bg-muted/30">
-                  <div className="bg-card rounded-lg p-3 shadow-sm">
-                    <p className="text-sm">
-                      Hi! How can I help you today? I can assist you with:
-                      <br />• Finding mentors
-                      <br />• Career guidance
-                      <br />• Job recommendations
-                      <br />• Skill development
-                    </p>
-                  </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  {messages.map((message) => (
+                    <div 
+                      key={message.id} 
+                      className={`flex ${message.isAI ? 'justify-start' : 'justify-end'}`}
+                    >
+                      <div className={`max-w-[80%] p-3 rounded-lg ${
+                        message.isAI 
+                          ? 'bg-muted text-foreground' 
+                          : 'bg-primary text-primary-foreground'
+                      }`}>
+                        <p className="text-sm">{message.text}</p>
+                        <p className="text-xs opacity-70 mt-1">
+                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="p-4 border-t">
                   <div className="flex gap-2">
