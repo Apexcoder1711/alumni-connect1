@@ -26,6 +26,8 @@ import { toast } from '@/hooks/use-toast';
 const StudentDashboard = () => {
   const [aiMessage, setAiMessage] = useState('');
   const [showAICoach, setShowAICoach] = useState(false);
+  const [showFloatingChat, setShowFloatingChat] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleAICoach = () => {
     setShowAICoach(true);
@@ -411,6 +413,72 @@ const StudentDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating AI Coach */}
+      {showFloatingChat && (
+        <div className="fixed bottom-6 right-6 z-50">
+          {isChatOpen ? (
+            <Card className="w-80 h-96 shadow-2xl animate-scale-in">
+              <CardHeader className="bg-gradient-primary text-primary-foreground rounded-t-lg">
+                <CardTitle className="text-sm flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Target className="h-4 w-4" />
+                    AI Career Coach
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-primary-foreground hover:bg-primary-foreground/20"
+                    onClick={() => setIsChatOpen(false)}
+                  >
+                    ×
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 flex flex-col h-full">
+                <div className="flex-1 p-4 bg-muted/30">
+                  <div className="bg-card rounded-lg p-3 shadow-sm">
+                    <p className="text-sm">
+                      Hi! How can I help you today? I can assist you with:
+                      <br />• Finding mentors
+                      <br />• Career guidance
+                      <br />• Job recommendations
+                      <br />• Skill development
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 border-t">
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Type your message..."
+                      value={aiMessage}
+                      onChange={(e) => setAiMessage(e.target.value)}
+                      className="flex-1 text-sm"
+                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    />
+                    <Button size="sm" onClick={handleSendMessage}>
+                      <Send className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="relative">
+              <Button
+                onClick={() => setIsChatOpen(true)}
+                className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all animate-pulse-glow bg-gradient-primary"
+              >
+                <MessageCircle className="h-6 w-6" />
+              </Button>
+              <div className="absolute -top-2 -left-20 bg-card border border-border rounded-lg px-3 py-2 shadow-lg animate-bounce-in">
+                <p className="text-xs whitespace-nowrap">Hi! How can I help you?</p>
+                <div className="absolute top-3 right-[-6px] w-0 h-0 border-l-[6px] border-l-border border-y-[4px] border-y-transparent"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
