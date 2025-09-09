@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      college_reference_ids: {
+        Row: {
+          created_at: string
+          id: string
+          is_used: boolean
+          reference_id: string
+          used_at: string | null
+          used_by: string | null
+          user_type: Database["public"]["Enums"]["user_role"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_used?: boolean
+          reference_id: string
+          used_at?: string | null
+          used_by?: string | null
+          user_type: Database["public"]["Enums"]["user_role"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_used?: boolean
+          reference_id?: string
+          used_at?: string | null
+          used_by?: string | null
+          user_type?: Database["public"]["Enums"]["user_role"]
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          college_ref_id: string
+          created_at: string
+          full_name: string
+          id: string
+          updated_at: string
+          user_id: string
+          user_role: Database["public"]["Enums"]["user_role"]
+        }
+        Insert: {
+          college_ref_id: string
+          created_at?: string
+          full_name: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          user_role: Database["public"]["Enums"]["user_role"]
+        }
+        Update: {
+          college_ref_id?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +82,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "student" | "alumni" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +209,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["student", "alumni", "admin"],
+    },
   },
 } as const
