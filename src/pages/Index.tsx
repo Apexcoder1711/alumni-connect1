@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle } from 'lucide-react';
+import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle, LogIn } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
@@ -29,11 +31,26 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <header className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="p-3 bg-gradient-primary rounded-2xl shadow-glow">
-              <GraduationCap className="h-8 w-8 text-primary-foreground" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex-1" />
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-primary rounded-2xl shadow-glow">
+                <GraduationCap className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <h1 className="text-4xl font-bold text-gradient-primary">AlumniConnect</h1>
             </div>
-            <h1 className="text-4xl font-bold text-gradient-primary">AlumniConnect</h1>
+            <div className="flex-1 flex justify-end">
+              {user ? (
+                <Button onClick={() => signOut()} variant="outline">
+                  Sign Out
+                </Button>
+              ) : (
+                <Button onClick={() => navigate('/auth')} className="flex items-center gap-2">
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </Button>
+              )}
+            </div>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Smart alumni management and mentorship platform powered by AI. 
