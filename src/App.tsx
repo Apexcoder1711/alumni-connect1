@@ -7,6 +7,9 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import StudentAuth from "./pages/StudentAuth";
+import AlumniAuth from "./pages/AlumniAuth";
+import AdminAuth from "./pages/AdminAuth";
 import StudentDashboard from "./pages/StudentDashboard";
 import AlumniDashboard from "./pages/AlumniDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -24,6 +27,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/student-auth" element={<StudentAuth />} />
+            <Route path="/alumni-auth" element={<AlumniAuth />} />
+            <Route path="/admin-auth" element={<AdminAuth />} />
             <Route path="/student-dashboard" element={
               <ProtectedRoute>
                 <StudentDashboard />

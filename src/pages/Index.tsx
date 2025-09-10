@@ -4,24 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle, LogIn } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle } from 'lucide-react';
 
 const Index = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
     // Simulate navigation after role selection
     setTimeout(() => {
       if (role === 'student') {
-        navigate('/student-dashboard');
+        navigate('/student-auth');
       } else if (role === 'alumni') {
-        navigate('/alumni-dashboard');
+        navigate('/alumni-auth');
       } else if (role === 'admin') {
-        navigate('/admin-dashboard');
+        navigate('/admin-auth');
       }
     }, 800);
   };
@@ -39,18 +37,7 @@ const Index = () => {
               </div>
               <h1 className="text-4xl font-bold text-gradient-primary">AlumniConnect</h1>
             </div>
-            <div className="flex-1 flex justify-end">
-              {user ? (
-                <Button onClick={() => signOut()} variant="outline">
-                  Sign Out
-                </Button>
-              ) : (
-                <Button onClick={() => navigate('/auth')} className="flex items-center gap-2">
-                  <LogIn className="h-4 w-4" />
-                  Sign In
-                </Button>
-              )}
-            </div>
+            <div className="flex-1" />
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Smart alumni management and mentorship platform powered by AI. 
