@@ -13,6 +13,8 @@ import AdminAuth from "./pages/AdminAuth";
 import StudentDashboard from "./pages/StudentDashboard";
 import AlumniDashboard from "./pages/AlumniDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Forum from "./pages/Forum";
+import AlumniManagement from "./pages/AlumniManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +45,16 @@ const App = () => (
             <Route path="/admin-dashboard" element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/forum" element={
+              <ProtectedRoute>
+                <Forum />
+              </ProtectedRoute>
+            } />
+            <Route path="/alumni-management" element={
+              <ProtectedRoute>
+                <AlumniManagement />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

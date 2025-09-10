@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle } from 'lucide-react';
+import { Users, GraduationCap, Settings, Sparkles, Target, MessageCircle, BookOpen } from 'lucide-react';
 
 const Index = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -72,10 +72,10 @@ const Index = () => {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>• Ask questions in Q&A forum</li>
                   <li>• Find mentors in your field</li>
                   <li>• Get AI career coaching</li>
                   <li>• Access job opportunities</li>
-                  <li>• Join networking events</li>
                 </ul>
               </CardContent>
             </Card>
@@ -100,10 +100,10 @@ const Index = () => {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>• Answer questions in Q&A forum</li>
                   <li>• Mentor students</li>
                   <li>• Post job opportunities</li>
                   <li>• Host events & webinars</li>
-                  <li>• Build your network</li>
                 </ul>
               </CardContent>
             </Card>
@@ -128,9 +128,9 @@ const Index = () => {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• Oversee community</li>
-                  <li>• Verify new members</li>
-                  <li>• Analytics & insights</li>
+                  <li>• Moderate Q&A forum</li>
+                  <li>• Manage alumni database</li>
+                  <li>• Send notifications</li>
                   <li>• Platform management</li>
                 </ul>
               </CardContent>
@@ -182,13 +182,13 @@ const Index = () => {
           <Card className="card-hover animate-slide-in" style={{ animationDelay: '0.2s' }}>
             <CardHeader className="text-center">
               <div className="mx-auto p-3 bg-warning/10 rounded-xl mb-4 w-fit">
-                <MessageCircle className="h-6 w-6 text-warning" />
+                <BookOpen className="h-6 w-6 text-warning" />
               </div>
-              <CardTitle className="text-lg">Community Building</CardTitle>
+              <CardTitle className="text-lg">Q&A Forum</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground text-center">
-                Foster connections through events, forums, and collaborative projects within your network.
+                Interactive Q&A forum where students ask questions and alumni share their expertise and knowledge.
               </p>
             </CardContent>
           </Card>
