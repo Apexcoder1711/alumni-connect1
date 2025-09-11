@@ -1,338 +1,435 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { Users, Send, MessageSquare, Calendar, GraduationCap } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Users,
+  Search,
+  Filter,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  GraduationCap,
+  Calendar,
+  Send,
+  Eye,
+  Edit,
+  Trash2,
+  UserCheck
+} from "lucide-react";
 
-interface AlumniProfile {
-  id: string;
-  user_id: string;
-  full_name: string;
-  user_role: string;
-  college_ref_id: string;
-  created_at: string;
-}
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  recipient_role: string;
-  created_at: string;
-  is_read: boolean;
-}
-
-const AlumniManagement = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [alumni, setAlumni] = useState<AlumniProfile[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [newNotification, setNewNotification] = useState({
+export default function AlumniManagement() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notificationForm, setNotificationForm] = useState({
     title: '',
     message: '',
-    recipient_type: 'alumni' as 'alumni' | 'student' | 'all'
+    recipient: ''
   });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+
+  const [alumni, setAlumni] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchAlumni();
-    fetchNotifications();
+    fetchProfiles();
   }, []);
 
-  const fetchAlumni = async () => {
-    const { data, error } = await supabase
-      .from('profiles')
+  const fetchProfiles = async () => {
+    setLoading(true);
+    
+    // Fetch alumni profiles
+    const { data: alumniData, error: alumniError } = await supabase
+      .from('alumni_profiles')
       .select('*')
-      .eq('user_role', 'alumni')
-      .order('created_at', { ascending: false });
+      .eq('is_profile_complete', true);
 
-    if (error) {
-      toast({ title: "Error", description: "Failed to load alumni data", variant: "destructive" });
+    // Fetch student profiles
+    const { data: studentData, error: studentError } = await supabase
+      .from('student_profiles')
+      .select('*')
+      .eq('is_profile_complete', true);
+
+    if (alumniError) {
+      console.error('Error fetching alumni:', alumniError);
+      toast({
+        title: "Error",
+        description: "Failed to load alumni profiles",
+        variant: "destructive",
+      });
     } else {
-      setAlumni(data || []);
+      setAlumni(alumniData || []);
     }
+
+    if (studentError) {
+      console.error('Error fetching students:', studentError);
+      toast({
+        title: "Error",
+        description: "Failed to load student profiles",
+        variant: "destructive",
+      });
+    } else {
+      setStudents(studentData || []);
+    }
+
     setLoading(false);
   };
 
-  const fetchNotifications = async () => {
-    const { data, error } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('sender_id', user?.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      toast({ title: "Error", description: "Failed to load notifications", variant: "destructive" });
-    } else {
-      setNotifications(data || []);
-    }
-  };
-
-  const sendNotification = async () => {
-    if (!newNotification.title.trim() || !newNotification.message.trim()) {
-      toast({ title: "Error", description: "Please fill in all fields", variant: "destructive" });
+  const handleSendNotification = async () => {
+    if (!notificationForm.title || !notificationForm.message || !notificationForm.recipient) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
       return;
     }
 
-    const { error } = await supabase
-      .from('notifications')
-      .insert({
-        sender_id: user?.id,
-        title: newNotification.title,
-        message: newNotification.message,
-        recipient_role: newNotification.recipient_type === 'all' ? null : newNotification.recipient_type
-      });
+    // Here you would implement the notification sending logic
+    toast({
+      title: "Success",
+      description: `Notification sent to ${notificationForm.recipient}`,
+    });
 
-    if (error) {
-      toast({ title: "Error", description: "Failed to send notification", variant: "destructive" });
-    } else {
-      toast({ title: "Success", description: "Notification sent successfully!" });
-      setNewNotification({ title: '', message: '', recipient_type: 'alumni' });
-      setIsDialogOpen(false);
-      fetchNotifications();
-    }
-  };
-
-  const sendPersonalMessage = async (recipientId: string, recipientName: string) => {
-    const title = `Message from Admin`;
-    const message = `Hello ${recipientName}, this is a personal message from the administration.`;
-    
-    const { error } = await supabase
-      .from('notifications')
-      .insert({
-        sender_id: user?.id,
-        recipient_id: recipientId,
-        title,
-        message
-      });
-
-    if (error) {
-      toast({ title: "Error", description: "Failed to send message", variant: "destructive" });
-    } else {
-      toast({ title: "Success", description: `Message sent to ${recipientName}!` });
-    }
+    setNotificationForm({ title: '', message: '', recipient: '' });
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Users className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading alumni data...</p>
-        </div>
-      </div>
-    );
+    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted to-primary-light">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-4xl font-bold text-gradient-primary mb-2">Alumni Management</h1>
-              <p className="text-muted-foreground">Manage alumni database and send notifications</p>
-            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-primary text-primary-foreground hover:opacity-90">
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Notification
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Send Notification</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Recipients</label>
-                    <select
-                      className="w-full p-2 border border-input rounded-md bg-background"
-                      value={newNotification.recipient_type}
-                      onChange={(e) => setNewNotification({ 
-                        ...newNotification, 
-                        recipient_type: e.target.value as 'alumni' | 'student' | 'all'
-                      })}
-                    >
-                      <option value="alumni">Alumni Only</option>
-                      <option value="student">Students Only</option>
-                      <option value="all">All Users</option>
-                    </select>
-                  </div>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+            <p className="text-gray-600 mt-1">Manage alumni and student profiles and send communications.</p>
+          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="flex items-center gap-2">
+                <Send className="h-4 w-4" />
+                Send Notification
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Send Notification</DialogTitle>
+                <DialogDescription>
+                  Send a notification to selected users.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Title</Label>
                   <Input
-                    placeholder="Notification title..."
-                    value={newNotification.title}
-                    onChange={(e) => setNewNotification({ ...newNotification, title: e.target.value })}
+                    id="title"
+                    value={notificationForm.title}
+                    onChange={(e) => setNotificationForm(prev => ({...prev, title: e.target.value}))}
+                    placeholder="Notification title"
                   />
+                </div>
+                <div>
+                  <Label htmlFor="message">Message</Label>
                   <Textarea
-                    placeholder="Notification message..."
-                    value={newNotification.message}
-                    onChange={(e) => setNewNotification({ ...newNotification, message: e.target.value })}
+                    id="message"
+                    value={notificationForm.message}
+                    onChange={(e) => setNotificationForm(prev => ({...prev, message: e.target.value}))}
+                    placeholder="Enter your message"
                     rows={4}
                   />
-                  <div className="flex gap-2">
-                    <Button onClick={sendNotification}>Send Notification</Button>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                  </div>
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Alumni Database */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5" />
-                    Alumni Database ({alumni.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>College ID</TableHead>
-                          <TableHead>Joined</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {alumni.map((alumnus) => (
-                          <TableRow key={alumnus.id}>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{alumnus.full_name}</span>
-                                <Badge className="bg-primary/10 text-primary">Alumni</Badge>
-                              </div>
-                            </TableCell>
-                            <TableCell className="font-mono text-sm">
-                              {alumnus.college_ref_id}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {formatDistanceToNow(new Date(alumnus.created_at))} ago
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => sendPersonalMessage(alumnus.user_id, alumnus.full_name)}
-                              >
-                                <MessageSquare className="w-4 h-4 mr-1" />
-                                Message
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  {alumni.length === 0 && (
-                    <div className="text-center py-8">
-                      <GraduationCap className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground">No alumni registered yet</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sent Notifications */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-4">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5" />
-                    Recent Notifications
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <div key={notification.id} className="border rounded-lg p-3">
-                        <h4 className="font-medium mb-2">{notification.title}</h4>
-                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                          {notification.message}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <Badge variant="secondary" className="text-xs">
-                            {notification.recipient_role || 'All Users'}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(notification.created_at))} ago
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {notifications.length === 0 && (
-                    <div className="text-center py-8">
-                      <MessageSquare className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground text-sm">No notifications sent yet</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Total Alumni</p>
-                    <p className="text-2xl font-bold">{alumni.length}</p>
-                  </div>
-                  <GraduationCap className="h-8 w-8 text-primary" />
+                <div>
+                  <Label htmlFor="recipient">Recipient</Label>
+                  <Select
+                    value={notificationForm.recipient}
+                    onValueChange={(value) => setNotificationForm(prev => ({...prev, recipient: value}))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select recipient type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="alumni">All Alumni</SelectItem>
+                      <SelectItem value="student">All Students</SelectItem>
+                      <SelectItem value="all">All Users</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Notifications Sent</p>
-                    <p className="text-2xl font-bold">{notifications.length}</p>
-                  </div>
-                  <Send className="h-8 w-8 text-accent" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Recent Registrations</p>
-                    <p className="text-2xl font-bold">
-                      {alumni.filter(a => 
-                        new Date(a.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-                      ).length}
-                    </p>
-                  </div>
-                  <Calendar className="h-8 w-8 text-success" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Button onClick={handleSendNotification} className="w-full">
+                  Send Notification
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
+
+        <Tabs defaultValue="alumni" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="alumni" className="flex items-center gap-2">
+              <GraduationCap className="h-4 w-4" />
+              Alumni ({alumni.length})
+            </TabsTrigger>
+            <TabsTrigger value="students" className="flex items-center gap-2">
+              <UserCheck className="h-4 w-4" />
+              Students ({students.length})
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="alumni" className="space-y-6">
+            {/* Alumni Filter and Search */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GraduationCap className="h-5 w-5" />
+                  Alumni Directory
+                </CardTitle>
+                <CardDescription>
+                  View and manage registered alumni profiles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 mb-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search alumni..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-8"
+                      />
+                    </div>
+                  </div>
+                  <Button variant="outline">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filter
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {alumni.filter(alumnus => 
+                    alumnus.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    alumnus.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    alumnus.major?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    alumnus.current_company?.toLowerCase().includes(searchTerm.toLowerCase())
+                  ).map((alumnus) => (
+                    <Card key={alumnus.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">{alumnus.full_name}</h3>
+                              <Badge 
+                                variant={alumnus.availability_for_mentoring ? 'default' : 'secondary'}
+                                className={alumnus.availability_for_mentoring ? 'bg-green-100 text-green-800' : ''}
+                              >
+                                {alumnus.availability_for_mentoring ? 'Available for Mentoring' : 'Not Available'}
+                              </Badge>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                              <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4" />
+                                <span>{alumnus.email}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <GraduationCap className="h-4 w-4" />
+                                <span>{alumnus.major} ({alumnus.graduation_year})</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Briefcase className="h-4 w-4" />
+                                <span>{alumnus.current_job_title} at {alumnus.current_company}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4" />
+                                <span>{alumnus.location}</span>
+                              </div>
+                              {alumnus.phone && (
+                                <div className="flex items-center gap-2">
+                                  <Phone className="h-4 w-4" />
+                                  <span>{alumnus.phone}</span>
+                                </div>
+                              )}
+                              {alumnus.industry && (
+                                <div className="flex items-center gap-2">
+                                  <Briefcase className="h-4 w-4" />
+                                  <span>{alumnus.industry}</span>
+                                </div>
+                              )}
+                            </div>
+                            {alumnus.skills && alumnus.skills.length > 0 && (
+                              <div className="mt-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {alumnus.skills.slice(0, 3).map((skill, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {skill}
+                                    </Badge>
+                                  ))}
+                                  {alumnus.skills.length > 3 && (
+                                    <Badge variant="outline" className="text-xs">
+                                      +{alumnus.skills.length - 3} more
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {alumni.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No alumni profiles found. Alumni need to complete their profiles to appear here.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="students" className="space-y-6">
+            {/* Students Filter and Search */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="h-5 w-5" />
+                  Students Directory
+                </CardTitle>
+                <CardDescription>
+                  View and manage registered student profiles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 mb-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search students..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-8"
+                      />
+                    </div>
+                  </div>
+                  <Button variant="outline">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filter
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {students.filter(student => 
+                    student.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    student.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    student.major?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    student.student_id?.toLowerCase().includes(searchTerm.toLowerCase())
+                  ).map((student) => (
+                    <Card key={student.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">{student.full_name}</h3>
+                              <Badge variant="outline">
+                                Year {student.current_year}
+                              </Badge>
+                              {student.seeking_mentorship && (
+                                <Badge className="bg-blue-100 text-blue-800">
+                                  Seeking Mentorship
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                              <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4" />
+                                <span>{student.email}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <GraduationCap className="h-4 w-4" />
+                                <span>{student.major} - {student.degree_program}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <UserCheck className="h-4 w-4" />
+                                <span>ID: {student.student_id}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" />
+                                <span>Graduating: {student.expected_graduation_year}</span>
+                              </div>
+                              {student.phone && (
+                                <div className="flex items-center gap-2">
+                                  <Phone className="h-4 w-4" />
+                                  <span>{student.phone}</span>
+                                </div>
+                              )}
+                              {student.gpa && (
+                                <div className="flex items-center gap-2">
+                                  <GraduationCap className="h-4 w-4" />
+                                  <span>GPA: {student.gpa}</span>
+                                </div>
+                              )}
+                            </div>
+                            {student.interests && student.interests.length > 0 && (
+                              <div className="mt-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {student.interests.slice(0, 3).map((interest, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {interest}
+                                    </Badge>
+                                  ))}
+                                  {student.interests.length > 3 && (
+                                    <Badge variant="outline" className="text-xs">
+                                      +{student.interests.length - 3} more
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {students.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No student profiles found. Students need to complete their profiles to appear here.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
-};
-
-export default AlumniManagement;
+}

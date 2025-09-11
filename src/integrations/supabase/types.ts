@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      alumni_profiles: {
+        Row: {
+          availability_for_mentoring: boolean | null
+          bio: string | null
+          created_at: string
+          current_company: string | null
+          current_job_title: string | null
+          degree: string | null
+          email: string | null
+          expertise_areas: string[] | null
+          full_name: string | null
+          graduation_year: number | null
+          id: string
+          industry: string | null
+          is_profile_complete: boolean | null
+          linkedin_url: string | null
+          location: string | null
+          major: string | null
+          phone: string | null
+          preferred_communication: string | null
+          skills: string[] | null
+          updated_at: string
+          user_id: string
+          years_of_experience: number | null
+        }
+        Insert: {
+          availability_for_mentoring?: boolean | null
+          bio?: string | null
+          created_at?: string
+          current_company?: string | null
+          current_job_title?: string | null
+          degree?: string | null
+          email?: string | null
+          expertise_areas?: string[] | null
+          full_name?: string | null
+          graduation_year?: number | null
+          id?: string
+          industry?: string | null
+          is_profile_complete?: boolean | null
+          linkedin_url?: string | null
+          location?: string | null
+          major?: string | null
+          phone?: string | null
+          preferred_communication?: string | null
+          skills?: string[] | null
+          updated_at?: string
+          user_id: string
+          years_of_experience?: number | null
+        }
+        Update: {
+          availability_for_mentoring?: boolean | null
+          bio?: string | null
+          created_at?: string
+          current_company?: string | null
+          current_job_title?: string | null
+          degree?: string | null
+          email?: string | null
+          expertise_areas?: string[] | null
+          full_name?: string | null
+          graduation_year?: number | null
+          id?: string
+          industry?: string | null
+          is_profile_complete?: boolean | null
+          linkedin_url?: string | null
+          location?: string | null
+          major?: string | null
+          phone?: string | null
+          preferred_communication?: string | null
+          skills?: string[] | null
+          updated_at?: string
+          user_id?: string
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
       answers: {
         Row: {
           content: string
@@ -184,12 +259,96 @@ export type Database = {
         }
         Relationships: []
       }
+      student_profiles: {
+        Row: {
+          career_goals: string | null
+          created_at: string
+          current_year: number | null
+          degree_program: string | null
+          email: string | null
+          expected_graduation_year: number | null
+          extracurricular_activities: string[] | null
+          full_name: string | null
+          github_url: string | null
+          gpa: number | null
+          id: string
+          interests: string[] | null
+          internship_experience: string | null
+          is_profile_complete: boolean | null
+          linkedin_url: string | null
+          major: string | null
+          phone: string | null
+          portfolio_url: string | null
+          projects: string[] | null
+          seeking_mentorship: boolean | null
+          skills: string[] | null
+          student_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          career_goals?: string | null
+          created_at?: string
+          current_year?: number | null
+          degree_program?: string | null
+          email?: string | null
+          expected_graduation_year?: number | null
+          extracurricular_activities?: string[] | null
+          full_name?: string | null
+          github_url?: string | null
+          gpa?: number | null
+          id?: string
+          interests?: string[] | null
+          internship_experience?: string | null
+          is_profile_complete?: boolean | null
+          linkedin_url?: string | null
+          major?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          projects?: string[] | null
+          seeking_mentorship?: boolean | null
+          skills?: string[] | null
+          student_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          career_goals?: string | null
+          created_at?: string
+          current_year?: number | null
+          degree_program?: string | null
+          email?: string | null
+          expected_graduation_year?: number | null
+          extracurricular_activities?: string[] | null
+          full_name?: string | null
+          github_url?: string | null
+          gpa?: number | null
+          id?: string
+          interests?: string[] | null
+          internship_experience?: string | null
+          is_profile_complete?: boolean | null
+          linkedin_url?: string | null
+          major?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          projects?: string[] | null
+          seeking_mentorship?: boolean | null
+          skills?: string[] | null
+          student_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_view_count: {
+        Args: { question_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       user_role: "student" | "alumni" | "admin"

@@ -70,21 +70,53 @@ const Forum = () => {
   const fetchQuestions = async () => {
     const { data, error } = await supabase
       .from('questions')
-      .select(`
-        *,
-        profiles!questions_user_id_fkey (full_name, user_role),
-        answers (
-          *,
-          profiles!answers_user_id_fkey (full_name, user_role)
-        )
-      `)
+      .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: false });
 
     if (error) {
       toast({ title: "Error", description: "Failed to load questions", variant: "destructive" });
     } else {
-      setQuestions(data || []);
+      // Fetch profiles and answers separately to avoid relation issues
+      const questionsWithData = await Promise.all(
+        (data || []).map(async (question) => {
+          // Fetch question author profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name, user_role')
+            .eq('user_id', question.user_id)
+            .single();
+
+          // Fetch answers with their profiles
+          const { data: answers } = await supabase
+            .from('answers')
+            .select('*')
+            .eq('question_id', question.id)
+            .eq('is_active', true);
+
+          const answersWithProfiles = await Promise.all(
+            (answers || []).map(async (answer) => {
+              const { data: answerProfile } = await supabase
+                .from('profiles')
+                .select('full_name, user_role')
+                .eq('user_id', answer.user_id)
+                .single();
+              
+              return {
+                ...answer,
+                profiles: answerProfile || { full_name: 'Unknown', user_role: 'student' }
+              };
+            })
+          );
+          
+          return {
+            ...question,
+            profiles: profile || { full_name: 'Unknown', user_role: 'student' },
+            answers: answersWithProfiles
+          };
+        })
+      );
+      setQuestions(questionsWithData);
     }
     setLoading(false);
   };
@@ -172,7 +204,8 @@ const Forum = () => {
   };
 
   const incrementViewCount = async (questionId: string) => {
-    await supabase.rpc('increment_view_count', { question_id: questionId });
+    const { error } = await supabase.rpc('increment_view_count', { question_id: questionId });
+    if (error) console.error('Error incrementing view count:', error);
   };
 
   const selectQuestion = (question: Question) => {
