@@ -263,6 +263,7 @@ export type Database = {
         Row: {
           career_goals: string | null
           created_at: string
+          credit_points: number | null
           current_year: number | null
           degree_program: string | null
           email: string | null
@@ -289,6 +290,7 @@ export type Database = {
         Insert: {
           career_goals?: string | null
           created_at?: string
+          credit_points?: number | null
           current_year?: number | null
           degree_program?: string | null
           email?: string | null
@@ -315,6 +317,7 @@ export type Database = {
         Update: {
           career_goals?: string | null
           created_at?: string
+          credit_points?: number | null
           current_year?: number | null
           degree_program?: string | null
           email?: string | null
@@ -335,6 +338,104 @@ export type Database = {
           seeking_mentorship?: boolean | null
           skills?: string[] | null
           student_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_projects: {
+        Row: {
+          admin_feedback: string | null
+          created_at: string
+          credit_points_earned: number | null
+          description: string
+          github_url: string | null
+          id: string
+          is_validated: boolean | null
+          project_url: string | null
+          skills_used: string[] | null
+          timetable_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          validation_status: string | null
+        }
+        Insert: {
+          admin_feedback?: string | null
+          created_at?: string
+          credit_points_earned?: number | null
+          description: string
+          github_url?: string | null
+          id?: string
+          is_validated?: boolean | null
+          project_url?: string | null
+          skills_used?: string[] | null
+          timetable_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          validation_status?: string | null
+        }
+        Update: {
+          admin_feedback?: string | null
+          created_at?: string
+          credit_points_earned?: number | null
+          description?: string
+          github_url?: string | null
+          id?: string
+          is_validated?: boolean | null
+          project_url?: string | null
+          skills_used?: string[] | null
+          timetable_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          validation_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_projects_timetable_id_fkey"
+            columns: ["timetable_id"]
+            isOneToOne: false
+            referencedRelation: "timetables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timetables: {
+        Row: {
+          created_at: string
+          description: string | null
+          goals: string[] | null
+          id: string
+          is_active: boolean | null
+          is_ai_generated: boolean | null
+          schedule: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          goals?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_ai_generated?: boolean | null
+          schedule?: Json
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          goals?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_ai_generated?: boolean | null
+          schedule?: Json
+          title?: string
           updated_at?: string
           user_id?: string
         }
