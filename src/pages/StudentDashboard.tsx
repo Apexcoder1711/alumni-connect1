@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { StudentProfile } from "@/components/StudentProfile";
+import AITimetableGenerator from "@/components/AITimetableGenerator";
 import {
   Search,
   MessageSquare,
@@ -184,10 +185,14 @@ export default function StudentDashboard() {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Dashboard
+            </TabsTrigger>
+            <TabsTrigger value="ai-timetable" className="flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              AI Timetable
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -538,6 +543,10 @@ export default function StudentDashboard() {
 
           <TabsContent value="profile">
             <StudentProfile />
+          </TabsContent>
+
+          <TabsContent value="ai-timetable" className="space-y-6">
+            <AITimetableGenerator />
           </TabsContent>
         </Tabs>
       </div>
