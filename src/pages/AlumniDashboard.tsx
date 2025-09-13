@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { AlumniProfile } from "@/components/AlumniProfile";
+import { StartupHub } from "@/pages/StartupHub";
 import {
   Users,
   Briefcase,
@@ -21,7 +22,8 @@ import {
   X,
   Eye,
   Star,
-  User
+  User,
+  Lightbulb
 } from "lucide-react";
 
 export default function AlumniDashboard() {
@@ -153,10 +155,14 @@ export default function AlumniDashboard() {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Dashboard
+            </TabsTrigger>
+            <TabsTrigger value="startup-hub" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Startup Hub
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -395,6 +401,10 @@ export default function AlumniDashboard() {
                 </Card>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="startup-hub">
+            <StartupHub />
           </TabsContent>
 
           <TabsContent value="profile">

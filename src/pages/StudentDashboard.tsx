@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { StudentProfile } from "@/components/StudentProfile";
 import AITimetableGenerator from "@/components/AITimetableGenerator";
+import { StartupHub } from "@/pages/StartupHub";
 import {
   Search,
   MessageSquare,
@@ -27,7 +28,8 @@ import {
   Trophy,
   Target,
   Zap,
-  User
+  User,
+  Lightbulb
 } from "lucide-react";
 
 export default function StudentDashboard() {
@@ -185,7 +187,7 @@ export default function StudentDashboard() {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Dashboard
@@ -193,6 +195,10 @@ export default function StudentDashboard() {
             <TabsTrigger value="ai-timetable" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
               AI Timetable
+            </TabsTrigger>
+            <TabsTrigger value="startup-hub" className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4" />
+              Startup Hub
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -539,6 +545,10 @@ export default function StudentDashboard() {
                 </Card>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="startup-hub">
+            <StartupHub />
           </TabsContent>
 
           <TabsContent value="profile">

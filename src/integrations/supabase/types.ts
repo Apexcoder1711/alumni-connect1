@@ -160,6 +160,44 @@ export type Database = {
         }
         Relationships: []
       }
+      nda_agreements: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          requester_id: string
+          signed_at: string | null
+          startup_idea_id: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id: string
+          requester_id: string
+          signed_at?: string | null
+          startup_idea_id: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          requester_id?: string
+          signed_at?: string | null
+          startup_idea_id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nda_agreements_startup_idea_id_fkey"
+            columns: ["startup_idea_id"]
+            isOneToOne: false
+            referencedRelation: "startup_ideas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -256,6 +294,110 @@ export type Database = {
           updated_at?: string
           user_id?: string
           view_count?: number
+        }
+        Relationships: []
+      }
+      startup_connections: {
+        Row: {
+          connection_type: string
+          created_at: string
+          id: string
+          message: string | null
+          startup_idea_id: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          connection_type: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          startup_idea_id: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          connection_type?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          startup_idea_id?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "startup_connections_startup_idea_id_fkey"
+            columns: ["startup_idea_id"]
+            isOneToOne: false
+            referencedRelation: "startup_ideas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      startup_ideas: {
+        Row: {
+          business_model: string | null
+          created_at: string
+          description: string
+          equity_offered: number | null
+          funding_needed: number | null
+          id: string
+          industry: string | null
+          is_active: boolean | null
+          is_public: boolean | null
+          problem_statement: string
+          requires_nda: boolean | null
+          solution: string
+          stage: string | null
+          tags: string[] | null
+          target_market: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          view_count: number | null
+        }
+        Insert: {
+          business_model?: string | null
+          created_at?: string
+          description: string
+          equity_offered?: number | null
+          funding_needed?: number | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean | null
+          is_public?: boolean | null
+          problem_statement: string
+          requires_nda?: boolean | null
+          solution: string
+          stage?: string | null
+          tags?: string[] | null
+          target_market?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          view_count?: number | null
+        }
+        Update: {
+          business_model?: string | null
+          created_at?: string
+          description?: string
+          equity_offered?: number | null
+          funding_needed?: number | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean | null
+          is_public?: boolean | null
+          problem_statement?: string
+          requires_nda?: boolean | null
+          solution?: string
+          stage?: string | null
+          tags?: string[] | null
+          target_market?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          view_count?: number | null
         }
         Relationships: []
       }
@@ -452,7 +594,13 @@ export type Database = {
       }
     }
     Enums: {
-      user_role: "student" | "alumni" | "admin"
+      user_role:
+        | "student"
+        | "alumni"
+        | "admin"
+        | "investor"
+        | "partner"
+        | "intern"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -580,7 +728,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      user_role: ["student", "alumni", "admin"],
+      user_role: [
+        "student",
+        "alumni",
+        "admin",
+        "investor",
+        "partner",
+        "intern",
+      ],
     },
   },
 } as const
