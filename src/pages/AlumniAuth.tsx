@@ -5,25 +5,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, ArrowLeft, Loader2 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { Users, ArrowLeft } from 'lucide-react';
+
+// NOTE: useAuth and useToast are no longer needed for this direct-redirect version.
 
 const AlumniAuth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, verifyCollegeRefId } = useAuth();
-  const { toast } = useToast();
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  
-  // Sign In State
+
+  // State for form inputs is kept so the UI remains interactive
   const [signInData, setSignInData] = useState({
     email: '',
     password: ''
   });
-  
-  // Sign Up State
+
   const [signUpData, setSignUpData] = useState({
     fullName: '',
     email: '',
@@ -36,75 +30,18 @@ const AlumniAuth = () => {
     industry: ''
   });
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  // Simplified handler to just navigate
+  const handleSignIn = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    const { error } = await signIn(signInData.email, signInData.password);
-    
-    if (error) {
-      toast({
-        title: "Error signing in",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      navigate('/alumni-dashboard');
-    }
-    
-    setIsLoading(false);
+    console.log("Bypassing sign-in, redirecting to dashboard...");
+    navigate('/alumni-dashboard');
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  // Simplified handler to just navigate
+  const handleSignUp = (e) => {
     e.preventDefault();
-    
-    if (signUpData.password !== signUpData.confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Passwords do not match",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
-    // First verify college reference ID
-    setIsVerifying(true);
-    const { isValid, userType } = await verifyCollegeRefId(signUpData.collegeRefId);
-    setIsVerifying(false);
-    
-    if (!isValid || userType !== 'alumni') {
-      toast({
-        title: "Invalid Reference ID",
-        description: "Please check your alumni reference ID",
-        variant: "destructive"
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    const { error } = await signUp(
-      signUpData.email, 
-      signUpData.password, 
-      signUpData.fullName, 
-      signUpData.collegeRefId
-    );
-    
-    if (error) {
-      toast({
-        title: "Error signing up",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Account created successfully!",
-        description: "Please check your email to verify your account.",
-      });
-    }
-    
-    setIsLoading(false);
+    console.log("Bypassing sign-up, redirecting to dashboard...");
+    navigate('/alumni-dashboard');
   };
 
   return (
@@ -161,7 +98,6 @@ const AlumniAuth = () => {
                         placeholder="alumni@company.com"
                         value={signInData.email}
                         onChange={(e) => setSignInData(prev => ({ ...prev, email: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -171,18 +107,10 @@ const AlumniAuth = () => {
                         type="password"
                         value={signInData.password}
                         onChange={(e) => setSignInData(prev => ({ ...prev, password: e.target.value }))}
-                        required
                       />
                     </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Signing In...
-                        </>
-                      ) : (
-                        'Sign In'
-                      )}
+                    <Button type="submit" className="w-full">
+                      Sign In
                     </Button>
                   </form>
                 </TabsContent>
@@ -190,15 +118,15 @@ const AlumniAuth = () => {
                 {/* Sign Up Tab */}
                 <TabsContent value="signup">
                   <form onSubmit={handleSignUp} className="space-y-4">
+                    {/* All sign-up inputs are kept for UI consistency */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-name">Full Name</Label>
                       <Input
                         id="signup-name"
                         type="text"
-                        placeholder="Jane Smith"
+                        placeholder="your name"
                         value={signUpData.fullName}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, fullName: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -209,55 +137,50 @@ const AlumniAuth = () => {
                         placeholder="alumni@company.com"
                         value={signUpData.email}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, email: e.target.value }))}
-                        required
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="graduation-year">Graduation Year</Label>
-                      <Input
-                        id="graduation-year"
-                        type="number"
-                        placeholder="2020"
-                        min="1950"
-                        max="2024"
-                        value={signUpData.graduationYear}
-                        onChange={(e) => setSignUpData(prev => ({ ...prev, graduationYear: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="current-company">Current Company</Label>
-                      <Input
-                        id="current-company"
-                        type="text"
-                        placeholder="Google, Microsoft, etc."
-                        value={signUpData.currentCompany}
-                        onChange={(e) => setSignUpData(prev => ({ ...prev, currentCompany: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="job-title">Job Title</Label>
-                      <Input
-                        id="job-title"
-                        type="text"
-                        placeholder="Software Engineer, Product Manager, etc."
-                        value={signUpData.jobTitle}
-                        onChange={(e) => setSignUpData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="industry">Industry</Label>
-                      <Input
-                        id="industry"
-                        type="text"
-                        placeholder="Technology, Finance, Healthcare, etc."
-                        value={signUpData.industry}
-                        onChange={(e) => setSignUpData(prev => ({ ...prev, industry: e.target.value }))}
-                        required
-                      />
-                    </div>
+                     <div className="space-y-2">
+                       <Label htmlFor="graduation-year">Graduation Year</Label>
+                       <Input
+                         id="graduation-year"
+                         type="number"
+                         placeholder="2020"
+                         min="1950"
+                         max="2024"
+                         value={signUpData.graduationYear}
+                         onChange={(e) => setSignUpData(prev => ({ ...prev, graduationYear: e.target.value }))}
+                       />
+                     </div>
+                     <div className="space-y-2">
+                       <Label htmlFor="current-company">Current Company</Label>
+                       <Input
+                         id="current-company"
+                         type="text"
+                         placeholder="Google, Microsoft, etc."
+                         value={signUpData.currentCompany}
+                         onChange={(e) => setSignUpData(prev => ({ ...prev, currentCompany: e.target.value }))}
+                       />
+                     </div>
+                     <div className="space-y-2">
+                       <Label htmlFor="job-title">Job Title</Label>
+                       <Input
+                         id="job-title"
+                         type="text"
+                         placeholder="Software Engineer, Product Manager, etc."
+                         value={signUpData.jobTitle}
+                         onChange={(e) => setSignUpData(prev => ({ ...prev, jobTitle: e.target.value }))}
+                       />
+                     </div>
+                     <div className="space-y-2">
+                       <Label htmlFor="industry">Industry</Label>
+                       <Input
+                         id="industry"
+                         type="text"
+                         placeholder="Technology, Finance, Healthcare, etc."
+                         value={signUpData.industry}
+                         onChange={(e) => setSignUpData(prev => ({ ...prev, industry: e.target.value }))}
+                       />
+                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="college-ref">College Reference ID</Label>
                       <Input
@@ -266,11 +189,10 @@ const AlumniAuth = () => {
                         placeholder="Enter your alumni reference ID"
                         value={signUpData.collegeRefId}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, collegeRefId: e.target.value }))}
-                        required
                       />
-                      <p className="text-xs text-muted-foreground">
-                        This ID is provided by your college administration
-                      </p>
+                       <p className="text-xs text-muted-foreground">
+                         This ID is provided by your college administration
+                       </p>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="signup-password">Password</Label>
@@ -279,7 +201,6 @@ const AlumniAuth = () => {
                         type="password"
                         value={signUpData.password}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, password: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -289,18 +210,10 @@ const AlumniAuth = () => {
                         type="password"
                         value={signUpData.confirmPassword}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        required
                       />
                     </div>
-                    <Button type="submit" className="w-full" disabled={isLoading || isVerifying}>
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {isVerifying ? 'Verifying Reference ID...' : 'Creating Account...'}
-                        </>
-                      ) : (
-                        'Create Alumni Account'
-                      )}
+                    <Button type="submit" className="w-full">
+                      Create Alumni Account
                     </Button>
                   </form>
                 </TabsContent>

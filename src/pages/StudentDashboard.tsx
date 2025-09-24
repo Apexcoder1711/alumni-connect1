@@ -59,39 +59,39 @@ export default function StudentDashboard() {
   const mentors = [
     {
       id: 1,
-      name: 'Dr. Sarah Johnson',
+      name: 'Sanvi Shukla',
       title: 'Senior Software Engineer',
-      company: 'Google',
+      company: 'JustPay',
       expertise: ['Machine Learning', 'Python', 'Data Science'],
       rating: 4.9,
       students: 23,
       image: '/placeholder.svg',
-      location: 'San Francisco, CA',
-      experience: '8 years'
+      location: 'Mumbai',
+      experience: '2 years'
     },
     {
       id: 2,
-      name: 'Michael Chen',
+      name: 'Rahul jha',
       title: 'Product Manager',
-      company: 'Microsoft',
+      company: 'google',
       expertise: ['Product Strategy', 'Analytics', 'Leadership'],
       rating: 4.8,
       students: 15,
       image: '/placeholder.svg',
-      location: 'Seattle, WA',
+      location: 'Banglore',
       experience: '6 years'
     },
     {
       id: 3,
-      name: 'Lisa Rodriguez',
+      name: 'Minal Singh',
       title: 'UX Design Lead',
-      company: 'Apple',
+      company: 'Zsclaler',
       expertise: ['Design Systems', 'User Research', 'Figma'],
       rating: 4.9,
       students: 31,
       image: '/placeholder.svg',
-      location: 'Cupertino, CA',
-      experience: '7 years'
+      location: 'pune',
+      experience: '3 yrs'
     }
   ];
 
@@ -100,9 +100,9 @@ export default function StudentDashboard() {
       id: 1,
       title: 'Software Engineering Intern',
       company: 'TechStart Inc.',
-      location: 'San Francisco, CA',
+      location: 'Delhi',
       type: 'Internship',
-      salary: '$25/hour',
+      salary: 'RS 25,000',
       posted: '2 days ago',
       tags: ['JavaScript', 'React', 'Node.js']
     },
@@ -112,7 +112,7 @@ export default function StudentDashboard() {
       company: 'DataCorp',
       location: 'Remote',
       type: 'Co-op',
-      salary: '$30/hour',
+      salary: 'RS 30,000',
       posted: '1 week ago',
       tags: ['Python', 'SQL', 'Machine Learning']
     },
@@ -120,9 +120,9 @@ export default function StudentDashboard() {
       id: 3,
       title: 'UX Research Assistant',
       company: 'Design Studio',
-      location: 'New York, NY',
+      location: 'Hydrabad',
       type: 'Part-time',
-      salary: '$22/hour',
+      salary: 'RS 20,000',
       posted: '3 days ago',
       tags: ['User Research', 'Figma', 'Analytics']
     }

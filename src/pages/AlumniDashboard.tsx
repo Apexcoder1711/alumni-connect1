@@ -49,7 +49,7 @@ export default function AlumniDashboard() {
   const mentorshipRequests = [
     {
       id: 1,
-      name: 'Emily Johnson',
+      name: 'Ayush kumar',
       major: 'Computer Science',
       year: 'Senior',
       interests: ['Machine Learning', 'Web Development'],
@@ -59,7 +59,7 @@ export default function AlumniDashboard() {
     },
     {
       id: 2,
-      name: 'David Park',
+      name: 'Ankita solanki',
       major: 'Business Administration', 
       year: 'Junior',
       interests: ['Startup', 'Entrepreneurship'],
@@ -69,7 +69,7 @@ export default function AlumniDashboard() {
     },
     {
       id: 3,
-      name: 'Sarah Miller',
+      name: 'N sagar Senapati',
       major: 'Design',
       year: 'Sophomore',
       interests: ['UX Design', 'Product Design'],

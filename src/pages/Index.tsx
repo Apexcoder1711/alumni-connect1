@@ -33,22 +33,22 @@ const Index = () => {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-2xl font-bold text-foreground">AlumniConnect</span>
+              <span className="text-2xl font-bold text-foreground">Alma Setu</span>
             </div>
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm">About</Button>
               <Button variant="ghost" size="sm">Features</Button>
               <Button variant="outline" size="sm">Sign In</Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
 
       <div className="container mx-auto px-6">
         {/* Hero Section */}
-        <section className="py-20 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-8">
+        {/* <section className="py-20 text-center"> */}
+          {/* <div className="max-w-4xl mx-auto"> */}
+            {/* <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-8">
               <Zap className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium text-primary">AI-Powered Platform</span>
             </div>
@@ -56,23 +56,23 @@ const Index = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               Connect. Learn. 
               <span className="text-primary"> Grow.</span>
-            </h1>
+            </h1> */}
             
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
+            {/* <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
               The smart way to connect students with alumni. Get mentorship, career guidance, 
               and real opportunities through our AI-powered matching system.
-            </p>
+            </p> */}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Button size="lg" className="text-lg px-8 py-6">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
                 Watch Demo
               </Button>
-            </div>
-          </div>
-        </section>
+            </div> */}
+          {/* </div> */}
+        {/* </section>  */}
 
         {/* Role Selection */}
         <section className="py-16">

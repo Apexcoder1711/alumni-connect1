@@ -5,25 +5,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { GraduationCap, ArrowLeft, Loader2 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { GraduationCap, ArrowLeft } from 'lucide-react';
+
+// NOTE: useAuth, useToast, and Loader2 are no longer needed.
 
 const StudentAuth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, verifyCollegeRefId } = useAuth();
-  const { toast } = useToast();
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  
-  // Sign In State
+
+  // State for form inputs is kept so the UI remains interactive
   const [signInData, setSignInData] = useState({
     email: '',
     password: ''
   });
-  
-  // Sign Up State
+
   const [signUpData, setSignUpData] = useState({
     fullName: '',
     email: '',
@@ -34,75 +28,18 @@ const StudentAuth = () => {
     graduationYear: ''
   });
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  // Simplified handler to just navigate
+  const handleSignIn = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    const { error } = await signIn(signInData.email, signInData.password);
-    
-    if (error) {
-      toast({
-        title: "Error signing in",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      navigate('/student-dashboard');
-    }
-    
-    setIsLoading(false);
+    console.log("Bypassing student sign-in, redirecting to dashboard...");
+    navigate('/student-dashboard');
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  // Simplified handler to just navigate
+  const handleSignUp = (e) => {
     e.preventDefault();
-    
-    if (signUpData.password !== signUpData.confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Passwords do not match",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
-    // First verify college reference ID
-    setIsVerifying(true);
-    const { isValid, userType } = await verifyCollegeRefId(signUpData.collegeRefId);
-    setIsVerifying(false);
-    
-    if (!isValid || userType !== 'student') {
-      toast({
-        title: "Invalid Reference ID",
-        description: "Please check your student reference ID",
-        variant: "destructive"
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    const { error } = await signUp(
-      signUpData.email, 
-      signUpData.password, 
-      signUpData.fullName, 
-      signUpData.collegeRefId
-    );
-    
-    if (error) {
-      toast({
-        title: "Error signing up",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Account created successfully!",
-        description: "Please check your email to verify your account.",
-      });
-    }
-    
-    setIsLoading(false);
+    console.log("Bypassing student sign-up, redirecting to dashboard...");
+    navigate('/student-dashboard');
   };
 
   return (
@@ -159,7 +96,6 @@ const StudentAuth = () => {
                         placeholder="student@college.edu"
                         value={signInData.email}
                         onChange={(e) => setSignInData(prev => ({ ...prev, email: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -169,18 +105,10 @@ const StudentAuth = () => {
                         type="password"
                         value={signInData.password}
                         onChange={(e) => setSignInData(prev => ({ ...prev, password: e.target.value }))}
-                        required
                       />
                     </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Signing In...
-                        </>
-                      ) : (
-                        'Sign In'
-                      )}
+                    <Button type="submit" className="w-full">
+                      Sign In
                     </Button>
                   </form>
                 </TabsContent>
@@ -193,10 +121,9 @@ const StudentAuth = () => {
                       <Input
                         id="signup-name"
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="Your name"
                         value={signUpData.fullName}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, fullName: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -207,7 +134,6 @@ const StudentAuth = () => {
                         placeholder="student@college.edu"
                         value={signUpData.email}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, email: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -218,7 +144,6 @@ const StudentAuth = () => {
                         placeholder="ST2024001"
                         value={signUpData.studentId}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, studentId: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -231,7 +156,6 @@ const StudentAuth = () => {
                         max="2030"
                         value={signUpData.graduationYear}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, graduationYear: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -242,7 +166,6 @@ const StudentAuth = () => {
                         placeholder="Enter your college reference ID"
                         value={signUpData.collegeRefId}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, collegeRefId: e.target.value }))}
-                        required
                       />
                       <p className="text-xs text-muted-foreground">
                         This ID is provided by your college administration
@@ -255,7 +178,6 @@ const StudentAuth = () => {
                         type="password"
                         value={signUpData.password}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, password: e.target.value }))}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -265,18 +187,10 @@ const StudentAuth = () => {
                         type="password"
                         value={signUpData.confirmPassword}
                         onChange={(e) => setSignUpData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        required
                       />
                     </div>
-                    <Button type="submit" className="w-full" disabled={isLoading || isVerifying}>
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {isVerifying ? 'Verifying Reference ID...' : 'Creating Account...'}
-                        </>
-                      ) : (
-                        'Create Student Account'
-                      )}
+                    <Button type="submit" className="w-full">
+                      Create Student Account
                     </Button>
                   </form>
                 </TabsContent>

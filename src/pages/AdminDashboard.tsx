@@ -28,8 +28,8 @@ const AdminDashboard = () => {
   const pendingVerifications = [
     {
       id: 1,
-      name: 'John Smith',
-      email: 'john.smith@alumni.edu',
+      name: 'Arjun kumar',
+      email: 'arjun_kumar@alumni.edu',
       type: 'Alumni',
       company: 'Google',
       graduationYear: '2018',
@@ -38,8 +38,8 @@ const AdminDashboard = () => {
     },
     {
       id: 2,
-      name: 'Emma Davis',
-      email: 'emma.davis@alumni.edu',
+      name: 'Rohit Sharma',
+      email: 'rohit_sharma@alumni.edu',
       type: 'Alumni',
       company: 'Microsoft',
       graduationYear: '2020',
@@ -48,8 +48,8 @@ const AdminDashboard = () => {
     },
     {
       id: 3,
-      name: 'Alex Johnson',
-      email: 'alex.j@student.edu',
+      name: 'N sagar senapati',
+      email: 'sagar_senapati@student.edu',
       type: 'Student',
       major: 'Computer Science',
       year: 'Senior',
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
     {
       id: 1,
       type: 'mentorship',
-      description: 'New mentorship established between Sarah Chen and Alex Park',
+      description: 'New mentorship established between rahul and geeta',
       timestamp: '2 hours ago'
     },
     {
@@ -91,7 +91,7 @@ const AdminDashboard = () => {
     {
       id: 4,
       type: 'verification',
-      description: 'Alumni verification completed for Maria Rodriguez',
+      description: 'Alumni verification completed for Sanvi Shukla',
       timestamp: '1 day ago'
     }
   ];
